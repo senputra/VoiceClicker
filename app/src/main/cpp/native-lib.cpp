@@ -9,13 +9,15 @@
 #include "DooDeeLOG.h"
 
 extern "C" {
+
 JNIEXPORT jstring JNICALL
-Java_com_doodee_voiceclicker_MainActivity_stringFromJNI(JNIEnv *env, jobject /* this */) {
+Java_com_doodee_voiceclicker_AudioEngine_stringFromJNI(JNIEnv *env, jclass type) {
+
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }
 JNIEXPORT void JNICALL
-Java_com_doodee_voiceclicker_MainActivity_startEngine(JNIEnv *env, jobject instance) {
+Java_com_doodee_voiceclicker_AudioEngine_startEngine(JNIEnv *env, jclass type) {
 
     AudioEngine *engine = new AudioEngine();
 

@@ -9,10 +9,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("native-lib");
-    }
+
 
     // Static, Universal variable
     static String LOG_TAG = "VoiceClicker";
@@ -23,14 +20,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Example of a call to a native method
-        TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+        TextView tv = findViewById(R.id.sample_text);
+        tv.setText(AudioEngine.stringFromJNI());
 
-        Button btn = (Button) findViewById(R.id.btnAAudio);
+        Button btn = findViewById(R.id.btnAAudio);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startEngine();
+                AudioEngine.startEngine();
             }
         });
 
@@ -65,9 +62,6 @@ public class MainActivity extends AppCompatActivity {
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
-    public native String stringFromJNI();
-
-    public native void startEngine();
 
     static String typeToString(int type){
         switch (type) {

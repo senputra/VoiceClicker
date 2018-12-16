@@ -3,20 +3,31 @@
 //
 
 #include <string>
-#include "AudioEngine.h"
 #include "DooDeeLOG.h"
+#include "AudioEngine.h"
+
 
 
 AAudioStream *stream = nullptr;
 
 AAudioStreamBuilder* AudioEngine::createStreamBuilder() {
 
-    AAUDIO_API::AAudioStreamBuilder *builder = nullptr;
-    aaudio_result_t result = AAUDIO_API::AAudio_createStreamBuilder(&builder);
+    AAudioStreamBuilder *builder = nullptr;
+    aaudio_result_t result = AAudio_createStreamBuilder(&builder);
     if (result != AAUDIO_OK) {
         LOGE("Error creating stream builder: %s", AAudio_convertResultToText(result));
     }
     return builder;
+}
+
+
+AudioEngine::AudioEngine() {
+    createRecordingStream();
+    return;
+}
+
+AudioEngine::~AudioEngine() {
+    closeOutputStream();
 }
 
 void AudioEngine::createRecordingStream(){
@@ -52,4 +63,8 @@ void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
 
 }
 
+void AudioEngine::closeOutputStream() {
+    LOGD("close Stream");
+    return;
+}
 
