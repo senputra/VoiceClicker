@@ -80,7 +80,22 @@ void AudioEngine::logRecordingStreamParameter(AAudioStream *stream) {
     result = AAudioStream_getChannelCount(stream);
     LOGD("Channel Count: %d", result);
     result = AAudioStream_getFormat(stream);
-    LOGD("Format: %s", AAudio_convertResultToText(result));
+    switch (result) {
+        case AAUDIO_FORMAT_INVALID:
+            LOGD("Format: INVALID");
+            break;
+        case AAUDIO_FORMAT_PCM_FLOAT:
+            LOGD("Format: FLOAT");
+            break;
+        case AAUDIO_FORMAT_PCM_I16:
+            LOGD("Format: Integer16");
+            break;
+        case AAUDIO_FORMAT_UNSPECIFIED:
+            LOGD("Format: UNSPECIFIED");
+            break;
+        default:
+            LOGD("Format: I also dont know");
+    }
     result = AAudioStream_getBufferCapacityInFrames(stream);
     LOGD("Buffer capacity in frames: %d", result);
     result = AAudioStream_getFramesPerBurst(stream);
