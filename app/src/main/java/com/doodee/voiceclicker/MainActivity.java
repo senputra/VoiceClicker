@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Static, Universal variable
-    static String TAG = "Voice-Clicker";
+    static String TAG = "VOICE-CLICKER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
