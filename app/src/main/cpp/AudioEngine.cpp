@@ -30,7 +30,6 @@ AudioEngine::~AudioEngine() {
 void AudioEngine::createRecordingStream(){
 
     AAudioStreamBuilder* builder = nullptr;
-    AAudioStream *stream = nullptr;
 
     builder = createStreamBuilder();
 
@@ -40,10 +39,29 @@ void AudioEngine::createRecordingStream(){
     }
 
     setupRecordingStreamParameter(builder);
-    aaudio_result_t result = AAudioStreamBuilder_openStream(builder,&stream);
+    aaudio_result_t result = AAudioStreamBuilder_openStream(builder, &stream_);
     LOGD("Recording Stream has been successfully created :: %s",
          AAudio_convertResultToText(result));
-    logRecordingStreamParameter(stream);
+    logRecordingStreamParameter(stream_);
+
+
+    if (result == AAUDIO_OK) {
+        sampleRate_ = AAudioStream_getSampleRate(stream_);
+        framesPerBurst_ = AAudioStream_getFramesPerBurst(stream_);
+
+        // Set the buffer size to the burst size - this will give us the minimum possible latency
+        AAudioStream_setBufferSizeInFrames(stream_, framesPerBurst_);
+
+        logRecordingStreamParameter(stream_);
+
+        result = AAudioStream_requestStart(stream_);
+        if (result != AAUDIO_OK) {
+            LOGE("Error starting stream. %s", AAudio_convertResultToText(result));
+        }
+
+        AAudioStreamBuilder_delete(builder);
+    }
+
 
 }
 
@@ -54,8 +72,8 @@ void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
     // We request EXCLUSIVE mode since this will give us the lowest possible latency.
     // If EXCLUSIVE mode isn't available the builder will fall back to SHARED mode.
     AAudioStreamBuilder_setPerformanceMode(builder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
+    AAudioStreamBuilder_setFormat(builder, AAUDIO_FORMAT_PCM_I16);
 
-//    AAudioStreamBuilder_setFormat(builder, sampleFormat_);
 //    AAudioStreamBuilder_setChannelCount(builder, sampleChannels_);
 
 //    AAudioStreamBuilder_setDataCallback(builder, ::dataCallback, this);
@@ -65,21 +83,21 @@ void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
 
 void AudioEngine::logRecordingStreamParameter(AAudioStream *stream) {
     aaudio_result_t result;
-//    result = AAudioStream_getDeviceId(stream);
+//    result = AAudioStream_getDeviceId(stream_);
 //    LOGD("DeviceId: %d",result);
-    result = AAudioStream_getDirection(stream);
+    result = AAudioStream_getDirection(stream_);
     if (result == AAUDIO_DIRECTION_INPUT) {
         LOGD("Direction : input; %d", result);
     } else if (result == AAUDIO_DIRECTION_OUTPUT) {
         LOGD("Direction : output; %d", result);
     }
-    result = AAudioStream_getSharingMode(stream);
+    result = AAudioStream_getSharingMode(stream_);
     LOGD("Sharing mode: %d", result);
-    result = AAudioStream_getSampleRate(stream);
+    result = AAudioStream_getSampleRate(stream_);
     LOGD("Sample rate: %d", result);
-    result = AAudioStream_getChannelCount(stream);
+    result = AAudioStream_getChannelCount(stream_);
     LOGD("Channel Count: %d", result);
-    result = AAudioStream_getFormat(stream);
+    result = AAudioStream_getFormat(stream_);
     switch (result) {
         case AAUDIO_FORMAT_INVALID:
             LOGD("Format: INVALID");
@@ -96,16 +114,20 @@ void AudioEngine::logRecordingStreamParameter(AAudioStream *stream) {
         default:
             LOGD("Format: I also dont know");
     }
-    result = AAudioStream_getBufferCapacityInFrames(stream);
+    result = AAudioStream_getBufferCapacityInFrames(stream_);
     LOGD("Buffer capacity in frames: %d", result);
-    result = AAudioStream_getFramesPerBurst(stream);
+    result = AAudioStream_getFramesPerBurst(stream_);
     LOGD("FramesPerBurst: %d", result);
-    result = AAudioStream_getBufferSizeInFrames(stream);
+    result = AAudioStream_getBufferSizeInFrames(stream_);
     LOGD("Buffer size in frames: %d", result);
 }
 
 void AudioEngine::closeRecordingStream() {
     LOGD("close Stream");
     return;
+}
+
+void AudioEngine::checkStreamStatus() {
+    LOGD("Current Sample Rate: %d", AAudioStream_getPerformanceMode(stream_));
 }
 

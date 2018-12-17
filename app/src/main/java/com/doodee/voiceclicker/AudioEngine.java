@@ -12,4 +12,7 @@ public enum AudioEngine {
     public static native String stringFromJNI();
 
     public static native void startEngine();
+
+    public static native void checkStat();
+
 }

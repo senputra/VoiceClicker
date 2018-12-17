@@ -10,6 +10,8 @@
 
 extern "C" {
 
+static AudioEngine *engine = nullptr;
+
 JNIEXPORT jstring JNICALL
 Java_com_doodee_voiceclicker_AudioEngine_stringFromJNI(JNIEnv *env, jclass type) {
 
@@ -19,10 +21,16 @@ Java_com_doodee_voiceclicker_AudioEngine_stringFromJNI(JNIEnv *env, jclass type)
 JNIEXPORT void JNICALL
 Java_com_doodee_voiceclicker_AudioEngine_startEngine(JNIEnv *env, jclass type) {
 
-    AudioEngine *engine = new AudioEngine();
-
+    engine = new AudioEngine();
     LOGD("OKEHHHH");
 
+}
+JNIEXPORT void JNICALL
+Java_com_doodee_voiceclicker_AudioEngine_checkStat(JNIEnv *env, jclass type) {
+
+    engine->checkStreamStatus();
+    LOGD("Check status triggered");
 
 }
+
 }
