@@ -23,7 +23,6 @@ Java_com_doodee_voiceclicker_AudioEngine_startEngine(JNIEnv *env, jclass type) {
 
     LOGD("OKEHHHH");
 
-    engine->createRecordingStream();
 
 }
 }

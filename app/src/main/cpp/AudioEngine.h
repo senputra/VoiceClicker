@@ -22,13 +22,14 @@ private:
     AAudioStreamBuilder *createStreamBuilder();
     void setupRecordingStreamParameter(AAudioStreamBuilder *builder);
 
-
-private:
     int32_t playbackDeviceId_ = AAUDIO_UNSPECIFIED;
     aaudio_format_t sampleFormat_;
     int16_t sampleChannels_;
 
-    void closeOutputStream();
+private:
+    void closeRecordingStream();
+
+    void logRecordingStreamParameter(AAudioStream *stream);
 };
 
 #endif //VOICECLICKER_AUDIOENGINE_H
