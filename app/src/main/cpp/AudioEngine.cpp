@@ -41,9 +41,10 @@ void AudioEngine::createRecordingStream(){
 
     setupRecordingStreamParameter(builder);
     aaudio_result_t result = AAudioStreamBuilder_openStream(builder,&stream);
+    LOGD("Recording Stream has been successfully created :: %s",
+         AAudio_convertResultToText(result));
     logRecordingStreamParameter(stream);
-    LOGD("Recording Stream has been successfully created");
-    LOGD(AAudio_convertResultToText(result));
+
 }
 
 void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
@@ -53,7 +54,6 @@ void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
     // We request EXCLUSIVE mode since this will give us the lowest possible latency.
     // If EXCLUSIVE mode isn't available the builder will fall back to SHARED mode.
     AAudioStreamBuilder_setPerformanceMode(builder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
-    AAudioStreamBuilder_setDirection(builder, AAUDIO_DIRECTION_OUTPUT);
 
 //    AAudioStreamBuilder_setFormat(builder, sampleFormat_);
 //    AAudioStreamBuilder_setChannelCount(builder, sampleChannels_);
@@ -64,21 +64,25 @@ void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
 }
 
 void AudioEngine::logRecordingStreamParameter(AAudioStream *stream) {
-    int32_t result;
-    result = AAudioStream_getDeviceId(stream);
-    LOGD(std::to_string(result).c_str());
+    aaudio_result_t result;
+//    result = AAudioStream_getDeviceId(stream);
+//    LOGD("DeviceId: %d",result);
     result = AAudioStream_getDirection(stream);
-    LOGD(std::to_string(result).c_str());
+    if (result == AAUDIO_DIRECTION_INPUT) {
+        LOGD("Direction : input; %d", result);
+    } else if (result == AAUDIO_DIRECTION_OUTPUT) {
+        LOGD("Direction : output; %d", result);
+    }
     result = AAudioStream_getSharingMode(stream);
-    LOGD(std::to_string(result).c_str());
+    LOGD("Sharing mode: %d", result);
     result = AAudioStream_getSampleRate(stream);
-    LOGD(std::to_string(result).c_str());
+    LOGD("Sample rate: %d", result);
     result = AAudioStream_getChannelCount(stream);
-    LOGD(std::to_string(result).c_str());
+    LOGD("Channel Count: %d", result);
     result = AAudioStream_getFormat(stream);
-    LOGD(std::to_string(result).c_str());
+    LOGD("Format: %s", AAudio_convertResultToText(result));
     result = AAudioStream_getBufferCapacityInFrames(stream);
-    LOGD(std::to_string(result).c_str());
+    LOGD("Buffer capacity in frames: %d", result);
 }
 
 void AudioEngine::closeRecordingStream() {
