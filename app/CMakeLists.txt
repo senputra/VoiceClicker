@@ -38,9 +38,10 @@ find_library( # Sets the name of the path variable.
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
-target_link_libraries( # Specifies the target library.
-                       native-lib
-                       # Links the target library to the log library
-                       # included in the NDK.
-        aaudio
-                       ${log-lib} )
+target_link_libraries(
+        # Specifies the target library.
+        native-lib
+        aaudio #aaudio is needed to implement the AAudio API
+        # Links the target library to the log library
+        # included in the NDK.
+        ${log-lib})
