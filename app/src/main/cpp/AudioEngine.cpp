@@ -83,6 +83,10 @@ void AudioEngine::logRecordingStreamParameter(AAudioStream *stream) {
     LOGD("Format: %s", AAudio_convertResultToText(result));
     result = AAudioStream_getBufferCapacityInFrames(stream);
     LOGD("Buffer capacity in frames: %d", result);
+    result = AAudioStream_getFramesPerBurst(stream);
+    LOGD("FramesPerBurst: %d", result);
+    result = AAudioStream_getBufferSizeInFrames(stream);
+    LOGD("Buffer size in frames: %d", result);
 }
 
 void AudioEngine::closeRecordingStream() {
