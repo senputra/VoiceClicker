@@ -84,7 +84,7 @@ void AudioEngine::createRecordingStream(){
         if (result != AAUDIO_OK) {
             LOGE("Error starting stream. %s", AAudio_convertResultToText(result));
         } else {
-            LOGD("Stream_ started :", AAudio_convertResultToText(result));
+            LOGD("Stream_ started : %s", AAudio_convertResultToText(result));
         }
 
         AAudioStreamBuilder_delete(builder);

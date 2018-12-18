@@ -17,8 +17,10 @@ public class MainActivity extends AppCompatActivity {
     static String TAG = "VOICE-CLICKER";
 
     boolean isEngineStarted = false;
+    boolean isTransmissionOn = false;
     TextView tv;
     Button btn;
+    Button btnTransmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +38,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnCheck = findViewById(R.id.btnCheckStat);
-        btnCheck.setOnClickListener(new View.OnClickListener() {
+        btnTransmit = findViewById(R.id.btnTransmit);
+        btnTransmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AudioEngine.checkStat();
+                toggleTransmission();
             }
         });
     }
@@ -59,6 +61,24 @@ public class MainActivity extends AppCompatActivity {
                 isEngineStarted = true;
             } else {
                 showToastShort("Audio Engine not created");
+            }
+        }
+    }
+
+    void toggleTransmission() {
+        if (isTransmissionOn) {
+            Transmission.stopTransmission();
+            tv.setText("Transmission Stopped");
+            btnTransmit.setText("Start Transmission");
+            isTransmissionOn = false;
+        } else {
+            if (checkMyPermission()) {
+                Transmission.startTransmission();
+                tv.setText("Transmission started");
+                btnTransmit.setText("Stop Transmission");
+                isTransmissionOn = true;
+            } else {
+                showToastShort("Transmission not started");
             }
         }
     }

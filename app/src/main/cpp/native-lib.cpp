@@ -7,10 +7,11 @@
 
 #include "AudioEngine.h"
 #include "DooDeeLOG.h"
-
+#include "Transmission.h"
 
 
 static AudioEngine *engine = nullptr;
+static Transmission *tEngine = nullptr;
 
 extern "C" {
 
@@ -40,6 +41,19 @@ Java_com_doodee_voiceclicker_AudioEngine_checkStat(JNIEnv *env, jclass type) {
     engine->checkStreamStatus();
     LOGD("Check status triggered");
 
+}
+
+
+JNIEXPORT void JNICALL
+Java_com_doodee_voiceclicker_Transmission_startTransmission(JNIEnv *env, jclass type) {
+
+    Transmission *tEngine = new Transmission();
+}
+
+JNIEXPORT void JNICALL
+Java_com_doodee_voiceclicker_Transmission_stopTransmission(JNIEnv *env, jclass type) {
+
+    tEngine->stop();
 }
 
 }

@@ -44,7 +44,6 @@ target_link_libraries(
         native-lib
 
         aaudio #aaudio is needed to implement the AAudio API
-        asio #asio library for networking
 
         # Links the target library to the log library
         # included in the NDK.
