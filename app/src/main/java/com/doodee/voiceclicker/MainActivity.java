@@ -69,21 +69,19 @@ public class MainActivity extends AppCompatActivity {
      * @return true->permission granted ; false->otherwise
      */
     protected boolean checkMyPermission() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
 
 
             // No explanation needed; request the permission
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.INTERNET},
                     3);
 
             //check if permission is granted
-            if (ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.RECORD_AUDIO)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
                 //not granted
                 showToastShort("LOOOSERRR");
                 return false;
