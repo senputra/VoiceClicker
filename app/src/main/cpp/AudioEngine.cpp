@@ -6,6 +6,33 @@
 #include "DooDeeLOG.h"
 #include "AudioEngine.h"
 
+void errorCallback(AAudioStream *stream,
+                   void *userData,
+                   aaudio_result_t error) {
+    assert(userData);
+    AudioEngine *audioEngine = reinterpret_cast<AudioEngine *>(userData);
+    audioEngine->errorCallback(stream, error);
+}
+
+/**
+ * Every time the playback stream requires data this method will be called.
+ *
+ * @param stream the audio stream which is requesting data, this is the playStream_ object
+ * @param userData the context in which the function is being called, in this case it will be the
+ * EchoAudioEngine instance
+ * @param audioData an empty buffer into which we can write our audio data
+ * @param numFrames the number of audio frames which are required
+ * @return Either AAUDIO_CALLBACK_RESULT_CONTINUE if the stream should continue requesting data
+ * or AAUDIO_CALLBACK_RESULT_STOP if the stream should stop.
+ *
+ * @see EchoAudioEngine#dataCallback
+ */
+aaudio_data_callback_result_t dataCallback(AAudioStream *stream, void *userData,
+                                           void *audioData, int32_t numFrames) {
+    assert(userData && audioData);
+    AudioEngine *audioEngine = reinterpret_cast<AudioEngine *>(userData);
+    return audioEngine->dataCallback(stream, audioData, numFrames);
+}
 
 AAudioStreamBuilder* AudioEngine::createStreamBuilder() {
 
@@ -56,34 +83,33 @@ void AudioEngine::createRecordingStream(){
         result = AAudioStream_requestStart(stream_);
         if (result != AAUDIO_OK) {
             LOGE("Error starting stream. %s", AAudio_convertResultToText(result));
+        } else {
+            LOGD("Stream_ started :", AAudio_convertResultToText(result));
         }
 
         AAudioStreamBuilder_delete(builder);
     }
 
-
 }
 
 void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
-    AAudioStreamBuilder_setDeviceId(builder, playbackDeviceId_);
+    AAudioStreamBuilder_setDeviceId(builder, AAUDIO_UNSPECIFIED);
     AAudioStreamBuilder_setDirection(builder, AAUDIO_DIRECTION_INPUT);
     AAudioStreamBuilder_setSharingMode(builder, AAUDIO_SHARING_MODE_EXCLUSIVE);
     // We request EXCLUSIVE mode since this will give us the lowest possible latency.
     // If EXCLUSIVE mode isn't available the builder will fall back to SHARED mode.
     AAudioStreamBuilder_setPerformanceMode(builder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
     AAudioStreamBuilder_setFormat(builder, AAUDIO_FORMAT_PCM_I16);
-
-//    AAudioStreamBuilder_setChannelCount(builder, sampleChannels_);
-
-//    AAudioStreamBuilder_setDataCallback(builder, ::dataCallback, this);
-//    AAudioStreamBuilder_setErrorCallback(builder, ::errorCallback, this);
+    AAudioStreamBuilder_setChannelCount(builder, 1);
+    AAudioStreamBuilder_setDataCallback(builder, ::dataCallback, this);
+    AAudioStreamBuilder_setErrorCallback(builder, ::errorCallback, this);
 
 }
 
 void AudioEngine::logRecordingStreamParameter(AAudioStream *stream) {
     aaudio_result_t result;
-//    result = AAudioStream_getDeviceId(stream_);
-//    LOGD("DeviceId: %d",result);
+    result = AAudioStream_getDeviceId(stream_);
+    LOGD("DeviceId: %d", result);
     result = AAudioStream_getDirection(stream_);
     if (result == AAUDIO_DIRECTION_INPUT) {
         LOGD("Direction : input; %d", result);
@@ -127,7 +153,10 @@ void AudioEngine::closeRecordingStream() {
 }
 
 void AudioEngine::checkStreamStatus() {
-    LOGD("Current Sample Rate: %d", AAudioStream_getPerformanceMode(stream_));
+    void *data = nullptr;
+
+//    LOGD("CHECKKK:::: %d",AAudioStream_read(stream_, data, 960,static_cast<int64_t>(0)));
+//    LOGD("Current Sample Rate: %d", AAudioStream_getFramesRead(stream_));
 }
 
 void AudioEngine::errorCallback(AAudioStream *stream, aaudio_result_t audioError) {

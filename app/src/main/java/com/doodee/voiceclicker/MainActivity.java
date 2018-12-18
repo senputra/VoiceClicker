@@ -16,34 +16,23 @@ public class MainActivity extends AppCompatActivity {
     // Static, Universal variable
     static String TAG = "VOICE-CLICKER";
 
+    boolean isEngineStarted = false;
+    TextView tv;
+    Button btn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final boolean isEngineStarted = false;
-
-
         // Example of a call to a native method
-        final TextView tv = findViewById(R.id.sample_text);
+        tv = findViewById(R.id.sample_text);
 
-        final Button btn = findViewById(R.id.btnAAudio);
+        btn = findViewById(R.id.btnAAudio);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isEngineStarted) {
-                    AudioEngine.stopEngine();
-                    tv.setText("Recording Stream Stopped");
-                    btn.setText("Start Audio");
-                } else {
-                    if (checkMyPermission()) {
-                        AudioEngine.startEngine();
-                        tv.setText("Recording Stream started");
-                        btn.setText("Stop Audio");
-                    } else {
-                        showToastShort("Audio Engine not created");
-                    }
-                }
+                toggleEngine();
             }
         });
 
@@ -54,6 +43,24 @@ public class MainActivity extends AppCompatActivity {
                 AudioEngine.checkStat();
             }
         });
+    }
+
+    void toggleEngine() {
+        if (isEngineStarted) {
+            AudioEngine.stopEngine();
+            tv.setText("Recording Stream Stopped");
+            btn.setText("Start Audio");
+            isEngineStarted = false;
+        } else {
+            if (checkMyPermission()) {
+                AudioEngine.startEngine();
+                tv.setText("Recording Stream started");
+                btn.setText("Stop Audio");
+                isEngineStarted = true;
+            } else {
+                showToastShort("Audio Engine not created");
+            }
+        }
     }
 
     /**

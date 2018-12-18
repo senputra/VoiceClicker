@@ -20,6 +20,13 @@ public:
 
     void checkStreamStatus();
 
+    void errorCallback(AAudioStream *stream, aaudio_result_t audioError);
+
+    aaudio_data_callback_result_t
+    dataCallback(AAudioStream *stream, void *audioData, int32_t numFrames);
+
+    void stopStream();
+
 private:
     AAudioStreamBuilder *createStreamBuilder();
     void setupRecordingStreamParameter(AAudioStreamBuilder *builder);
@@ -31,6 +38,8 @@ private:
     int32_t framesPerBurst_;
 
     AAudioStream *stream_ = nullptr;
+
+    bool isTransmissionOn_ = false;
 
 private:
     void closeRecordingStream();
