@@ -8,9 +8,11 @@
 #include "AudioEngine.h"
 #include "DooDeeLOG.h"
 
-extern "C" {
+
 
 static AudioEngine *engine = nullptr;
+
+extern "C" {
 
 JNIEXPORT jstring JNICALL
 Java_com_doodee_voiceclicker_AudioEngine_stringFromJNI(JNIEnv *env, jclass type) {
@@ -25,6 +27,13 @@ Java_com_doodee_voiceclicker_AudioEngine_startEngine(JNIEnv *env, jclass type) {
     LOGD("OKEHHHH");
 
 }
+
+JNIEXPORT void JNICALL
+Java_com_doodee_voiceclicker_AudioEngine_stopEngine(JNIEnv *env, jclass type) {
+
+    engine->stopStream();
+}
+
 JNIEXPORT void JNICALL
 Java_com_doodee_voiceclicker_AudioEngine_checkStat(JNIEnv *env, jclass type) {
 

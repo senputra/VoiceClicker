@@ -17,7 +17,6 @@ AAudioStreamBuilder* AudioEngine::createStreamBuilder() {
     return builder;
 }
 
-
 AudioEngine::AudioEngine() {
     createRecordingStream();
     return;
@@ -131,3 +130,27 @@ void AudioEngine::checkStreamStatus() {
     LOGD("Current Sample Rate: %d", AAudioStream_getPerformanceMode(stream_));
 }
 
+void AudioEngine::errorCallback(AAudioStream *stream, aaudio_result_t audioError) {
+    LOGE("errorCallback : %s", AAudio_convertResultToText(audioError));
+    return;
+}
+
+void AudioEngine::stopStream() {
+
+    aaudio_result_t result = AAudioStream_requestStop(stream_);
+    LOGD("Recording stream has been stopped :: %s ", AAudio_convertResultToText(result));
+
+}
+
+aaudio_data_callback_result_t
+AudioEngine::dataCallback(AAudioStream *stream, void *audioData, int32_t numFrames) {
+
+    if (isTransmissionOn_) {
+        LOGD("Transmitting tu tu tu tu");
+    }
+
+    LOGD("numFrames of the recording %d", numFrames);
+
+    return AAUDIO_CALLBACK_RESULT_CONTINUE;
+
+}

@@ -21,18 +21,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Example of a call to a native method
-        TextView tv = findViewById(R.id.sample_text);
-        tv.setText(AudioEngine.stringFromJNI());
+        final boolean isEngineStarted = false;
 
-        Button btn = findViewById(R.id.btnAAudio);
+
+        // Example of a call to a native method
+        final TextView tv = findViewById(R.id.sample_text);
+
+        final Button btn = findViewById(R.id.btnAAudio);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkMyPermission()) {
-                    AudioEngine.startEngine();
+                if (isEngineStarted) {
+                    AudioEngine.stopEngine();
+                    tv.setText("Recording Stream Stopped");
+                    btn.setText("Start Audio");
                 } else {
-                    showToastShort("Audio Engine not created");
+                    if (checkMyPermission()) {
+                        AudioEngine.startEngine();
+                        tv.setText("Recording Stream started");
+                        btn.setText("Stop Audio");
+                    } else {
+                        showToastShort("Audio Engine not created");
+                    }
                 }
             }
         });

@@ -15,4 +15,6 @@ public enum AudioEngine {
 
     public static native void checkStat();
 
+    public static native void stopEngine();
+
 }
