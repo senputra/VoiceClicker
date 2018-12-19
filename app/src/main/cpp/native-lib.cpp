@@ -25,6 +25,7 @@ JNIEXPORT void JNICALL
 Java_com_doodee_voiceclicker_AudioEngine_startEngine(JNIEnv *env, jclass type) {
 
     engine = new AudioEngine();
+    tEngine = new Transmission();
     LOGD("OKEHHHH");
 
 }
@@ -47,12 +48,17 @@ Java_com_doodee_voiceclicker_AudioEngine_checkStat(JNIEnv *env, jclass type) {
 JNIEXPORT void JNICALL
 Java_com_doodee_voiceclicker_Transmission_startTransmission(JNIEnv *env, jclass type) {
 
-    Transmission *tEngine = new Transmission();
+    if (tEngine == nullptr) {
+        tEngine = new Transmission();
+    }
+    engine->toggleTransmission();
+    engine->setTransmissionEngine(tEngine);
 }
 
 JNIEXPORT void JNICALL
 Java_com_doodee_voiceclicker_Transmission_stopTransmission(JNIEnv *env, jclass type) {
 
+    engine->toggleTransmission();
     tEngine->stop();
 }
 

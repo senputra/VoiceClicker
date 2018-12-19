@@ -5,6 +5,7 @@
 #include <string>
 #include "DooDeeLOG.h"
 #include "AudioEngine.h"
+#include "Transmission.h"
 
 void errorCallback(AAudioStream *stream,
                    void *userData,
@@ -34,7 +35,7 @@ aaudio_data_callback_result_t dataCallback(AAudioStream *stream, void *userData,
     return audioEngine->dataCallback(stream, audioData, numFrames);
 }
 
-AAudioStreamBuilder* AudioEngine::createStreamBuilder() {
+AAudioStreamBuilder *AudioEngine::createStreamBuilder() {
 
     AAudioStreamBuilder *builder = nullptr;
     aaudio_result_t result = AAudio_createStreamBuilder(&builder);
@@ -53,13 +54,13 @@ AudioEngine::~AudioEngine() {
     closeRecordingStream();
 }
 
-void AudioEngine::createRecordingStream(){
+void AudioEngine::createRecordingStream() {
 
-    AAudioStreamBuilder* builder = nullptr;
+    AAudioStreamBuilder *builder = nullptr;
 
     builder = createStreamBuilder();
 
-    if(builder == nullptr){
+    if (builder == nullptr) {
         LOGE("Failed setting up stream");
         return;
     }
@@ -77,6 +78,8 @@ void AudioEngine::createRecordingStream(){
 
         // Set the buffer size to the burst size - this will give us the minimum possible latency
         AAudioStream_setBufferSizeInFrames(stream_, framesPerBurst_);
+
+        LOGD("Sample rate_ = %d Frames per burst = %d", sampleRate_, framesPerBurst_);
 
         logRecordingStreamParameter(stream_);
 
@@ -103,6 +106,8 @@ void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
     AAudioStreamBuilder_setChannelCount(builder, 1);
     AAudioStreamBuilder_setDataCallback(builder, ::dataCallback, this);
     AAudioStreamBuilder_setErrorCallback(builder, ::errorCallback, this);
+//    AAudioStreamBuilder_setSampleRate(builder,44100);
+    AAudioStreamBuilder_setFramesPerDataCallback(builder, 192);
 
 }
 
@@ -149,6 +154,7 @@ void AudioEngine::logRecordingStreamParameter(AAudioStream *stream) {
 
 void AudioEngine::closeRecordingStream() {
     LOGD("close Stream");
+    AAudioStream_close(stream_);
     return;
 }
 
@@ -174,12 +180,52 @@ void AudioEngine::stopStream() {
 aaudio_data_callback_result_t
 AudioEngine::dataCallback(AAudioStream *stream, void *audioData, int32_t numFrames) {
 
-    if (isTransmissionOn_) {
-        LOGD("Transmitting tu tu tu tu");
+    if (isFirstDataCallback_) {
+        drainRecordingStream(audioData, numFrames);
+        isFirstDataCallback_ = false;
     }
 
-    LOGD("numFrames of the recording %d", numFrames);
+    if (isTransmissionOn_) {
+//        LOGD("Transmitting tu tu tu tu");
+
+        /* So, in C++ buffer is darn weird
+         * There is no out of bound error
+         * I need to specify the limit
+         * sample rate 480000Hz means that there is 48,000 frames a second
+         * get the num of frames in audioData from numFrame
+         * in this case 192
+         * thus buffer is from audioData[0] to audioData[191*2] since one frame takes 2 Byte
+         * */
+        tEngine_->send(reinterpret_cast<int16_t * >(audioData), numFrames);
+    }
+
+    LOGD("numFrames of the recording %d", AAudioStream_getXRunCount(stream_));
 
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
 
+}
+
+void AudioEngine::toggleTransmission() {
+    if (isTransmissionOn_) {
+        LOGD("Transmitting tu tu tu tu");
+        isTransmissionOn_ = false;
+    } else {
+        isTransmissionOn_ = true;
+    }
+}
+
+void AudioEngine::setTransmissionEngine(Transmission *tEngine) {
+    tEngine_ = tEngine;
+    if (tEngine == nullptr) {
+        isTransmissionOn_ = false;
+        LOGE("Transmission Engine is not passed well");
+    }
+}
+
+void AudioEngine::drainRecordingStream(void *audioData, int32_t numFrames) {
+
+    aaudio_result_t clearedFrames = 0;
+    do {
+        clearedFrames = AAudioStream_read(stream_, audioData, numFrames, 0);
+    } while (clearedFrames > 0);
 }

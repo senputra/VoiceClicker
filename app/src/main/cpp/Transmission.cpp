@@ -24,21 +24,32 @@ void Transmission::setupClient() {
         asio::io_context io_context;
         LOGD("IO_CONTEXT GOTTEN");
 
-        udp::socket s(io_context, udp::endpoint(udp::v4(), 0));
+        socket_ = new udp::socket(io_context, udp::endpoint(udp::v4(), 0));
 
         udp::resolver resolver(io_context);
         LOGD("IO_CONTEXT RESOLVED");
 
-        udp::endpoint endpoint = *resolver.resolve(udp::v4(), "192.168.100.45", "5008").begin();
-        std::string str = "gaasdfasdf";
-        size_t request_length = std::strlen(str.c_str());
-        asio::error_code ec;
-        s.send_to(asio::buffer(str, request_length), endpoint);
+        endpoint_ = *resolver.resolve(udp::v4(), "192.168.100.45", "5008").begin();
     } catch (std::exception &e) {
         LOGE("Exception: %s", e.what());
     }
 }
 
-void Transmission::stop() {
 
+void Transmission::stop() {
+    socket_->release();
+    socket_->close();
+    delete (this);
+}
+
+void Transmission::send(int16_t *audioData, int32_t numFrames) {
+    try {
+        socket_->send_to(asio::buffer(audioData, static_cast<size_t>(numFrames) * 2), endpoint_);
+
+//        std::string str = "halasdfasdfasdfloooo";
+//        size_t request_length = std::strlen(str.c_str());
+//        LOGD("asdfasdflasdkfjlksadjflaskdjfklasjflsljakfdj %d",static_cast<size_t>(numFrames));
+    } catch (std::exception &e) {
+        LOGE("SOMETHING IS WRONG:: %s", e.what());
+    }
 }

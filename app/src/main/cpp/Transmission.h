@@ -23,13 +23,17 @@ public:
 
     void stop();
 
+
+    void send(int16_t *audioData, int32_t numFrames);
+
 private:
+
     std::string ipAddrs_;
-
     int port_;
-    int32_t bufferSize;
 
+    int32_t bufferSize;
     int32_t numFrames_ = 960;
+
     AAudioStream *stream_;
 
     void *data_;
@@ -37,6 +41,11 @@ private:
     void logData();
 
     void setupClient();
+
+    udp::socket *socket_;
+
+    udp::endpoint endpoint_;
+
 };
 
 
