@@ -9,11 +9,8 @@ public enum AudioEngine {
         System.loadLibrary("native-lib");
     }
 
-    public static native String stringFromJNI();
 
     public static native void startEngine();
-
-    public static native void checkStat();
 
     public static native void stopEngine();
 

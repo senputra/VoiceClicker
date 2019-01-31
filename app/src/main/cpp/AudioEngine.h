@@ -6,6 +6,7 @@
 #define VOICECLICKER_AUDIOENGINE_H
 
 #include <aaudio/AAudio.h>
+#include "TransmissionTCP.h"
 #include "Transmission.h"
 
 
@@ -18,8 +19,6 @@ public:
     ~AudioEngine();
     void createRecordingStream();
 
-    void checkStreamStatus();
-
     void errorCallback(AAudioStream *stream, aaudio_result_t audioError);
 
     aaudio_data_callback_result_t
@@ -31,7 +30,10 @@ public:
 
     void setTransmissionEngine(Transmission *tEngine);
 
+    void setTransmissionEngine(TransmissionTCP *tEngine);
+
 private:
+    bool isTCP = false;
     bool isTransmissionOn_ = false;
 
     AAudioStreamBuilder *createStreamBuilder();
@@ -39,14 +41,12 @@ private:
     int32_t playbackDeviceId_ = AAUDIO_UNSPECIFIED;
     aaudio_format_t sampleFormat_;
     int16_t sampleChannels_;
-
     int32_t sampleRate_;
-
     int32_t framesPerBurst_;
-
     AAudioStream *stream_ = nullptr;
-    Transmission *tEngine_ = nullptr;
+    void *tEngine_ = nullptr;
     bool isFirstDataCallback_ = true;
+
 private:
 
     void closeRecordingStream();

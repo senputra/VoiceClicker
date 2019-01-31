@@ -16,7 +16,7 @@ void errorCallback(AAudioStream *stream,
 }
 
 /**
- * Every time the playback stream requires data this method will be called.
+ * This method is called every 192 frames from the recording. Set from the builder parameter
  *
  * @param stream the audio stream which is requesting data, this is the playStream_ object
  * @param userData the context in which the function is being called, in this case it will be the
@@ -54,6 +54,9 @@ AudioEngine::~AudioEngine() {
     closeRecordingStream();
 }
 
+/**
+ *  This function is called to build a recording stream
+ */
 void AudioEngine::createRecordingStream() {
 
     AAudioStreamBuilder *builder = nullptr;
@@ -95,6 +98,11 @@ void AudioEngine::createRecordingStream() {
 
 }
 
+/**
+ * Set up the stream with lowest possible latency
+ * Currently the latency is 1000/(48000/192) = 4ms.
+ * Every 4ms the data from the microphone is transmitted to computer.
+ */
 void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
     AAudioStreamBuilder_setDeviceId(builder, AAUDIO_UNSPECIFIED);
     AAudioStreamBuilder_setDirection(builder, AAUDIO_DIRECTION_INPUT);
@@ -158,13 +166,6 @@ void AudioEngine::closeRecordingStream() {
     return;
 }
 
-void AudioEngine::checkStreamStatus() {
-    void *data = nullptr;
-
-//    LOGD("CHECKKK:::: %d",AAudioStream_read(stream_, data, 960,static_cast<int64_t>(0)));
-//    LOGD("Current Sample Rate: %d", AAudioStream_getFramesRead(stream_));
-}
-
 void AudioEngine::errorCallback(AAudioStream *stream, aaudio_result_t audioError) {
     LOGE("errorCallback : %s", AAudio_convertResultToText(audioError));
     return;
@@ -196,7 +197,13 @@ AudioEngine::dataCallback(AAudioStream *stream, void *audioData, int32_t numFram
          * in this case 192
          * thus buffer is from audioData[0] to audioData[191*2] since one frame takes 2 Byte
          * */
-        tEngine_->send(reinterpret_cast<int16_t * >(audioData), numFrames);
+        if (isTCP) {
+            reinterpret_cast<TransmissionTCP *>(tEngine_)->send(
+                    reinterpret_cast<int16_t * >(audioData), numFrames);
+        } else {
+            reinterpret_cast<Transmission *>(tEngine_)->send(
+                    reinterpret_cast<int16_t * >(audioData), numFrames);
+        }
     }
 
     LOGD("numFrames of the recording %d", AAudioStream_getXRunCount(stream_));
@@ -205,6 +212,9 @@ AudioEngine::dataCallback(AAudioStream *stream, void *audioData, int32_t numFram
 
 }
 
+/**
+ * Switch the Transmission Engine on and off.
+ */
 void AudioEngine::toggleTransmission() {
     if (isTransmissionOn_) {
         LOGD("Transmitting tu tu tu tu");
@@ -214,14 +224,28 @@ void AudioEngine::toggleTransmission() {
     }
 }
 
+/**
+ * Store the Transmission Engine passed down from parent class
+ */
 void AudioEngine::setTransmissionEngine(Transmission *tEngine) {
-    tEngine_ = tEngine;
+    tEngine_ = reinterpret_cast<Transmission *>(tEngine);
     if (tEngine == nullptr) {
         isTransmissionOn_ = false;
         LOGE("Transmission Engine is not passed well");
     }
 }
 
+void AudioEngine::setTransmissionEngine(TransmissionTCP *tEngine) {
+    tEngine_ = reinterpret_cast<TransmissionTCP *>(tEngine);
+    if (tEngine == nullptr) {
+        isTransmissionOn_ = false;
+        LOGE("Transmission Engine is not passed well");
+    }
+}
+
+/**
+ * Clean the recording stream when it is first started
+ */
 void AudioEngine::drainRecordingStream(void *audioData, int32_t numFrames) {
 
     aaudio_result_t clearedFrames = 0;

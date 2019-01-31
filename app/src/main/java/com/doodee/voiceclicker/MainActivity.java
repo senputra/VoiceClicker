@@ -5,8 +5,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
     TextView tv;
     Button btn;
     Button btnTransmit;
+    Server mServer;
+    EditText etIPAddrs;
+
+
+    int MOUSE = 1;
+    int KEYBOARD = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,42 @@ public class MainActivity extends AppCompatActivity {
                 toggleTransmission();
             }
         });
+
+        Button btnLeft = findViewById(R.id.btnLeft);
+        btnLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendControl(KEYBOARD, (int) 0x25);
+            }
+        });
+        Button btnRight = findViewById(R.id.btnRight);
+        btnRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendControl(KEYBOARD, (int) 0x27);
+            }
+        });
+
+        etIPAddrs = findViewById(R.id.etIPAddrs);
+    }
+
+
+    boolean sendControl(int type, int data) {
+        byte[] buffer = new byte[]{(byte) type, (byte) (data)};
+        if (mServer == null) {
+            setupServer(etIPAddrs.getText().toString(), 5009);
+            return false;
+        } else {
+            mServer.send(buffer);
+            Log.d(TAG, "onClick: send Control successful");
+        }
+        return true;
+    }
+
+    void setupServer(String ipAddress, int port) {
+        if (mServer == null) {
+            mServer = new Server(ipAddress, port);
+        }
     }
 
     void toggleEngine() {
@@ -75,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             if (checkMyPermission()) {
                 Transmission.startTransmission();
                 tv.setText("Transmission started");
-                btnTransmit.setText("Stop Transmission");
+                btnTransmit.setText("Stop Transmission!");
                 isTransmissionOn = true;
             } else {
                 showToastShort("Transmission not started");
