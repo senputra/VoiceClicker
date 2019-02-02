@@ -18,7 +18,9 @@ static bool isTCP = false;
 extern "C" {
 
 JNIEXPORT void JNICALL
-Java_com_doodee_voiceclicker_AudioEngine_startEngine(JNIEnv *env, jclass type) {
+Java_com_doodee_voiceclicker_AudioEngine_startEngine(JNIEnv *env, jclass type, jstring ipAddress_) {
+
+    const char *ipAddress = env->GetStringUTFChars(ipAddress_, 0);
 
     if (isTCP) {
         engine = new AudioEngine();
@@ -26,9 +28,11 @@ Java_com_doodee_voiceclicker_AudioEngine_startEngine(JNIEnv *env, jclass type) {
         LOGD("OKEHHHH");
     } else {
         engine = new AudioEngine();
-        tEngine = new Transmission();
+        tEngine = new Transmission(ipAddress);
         LOGD("OKEHHHH");
     }
+
+    env->ReleaseStringUTFChars(ipAddress_, ipAddress);
 
 }
 
@@ -40,22 +44,23 @@ Java_com_doodee_voiceclicker_AudioEngine_stopEngine(JNIEnv *env, jclass type) {
 
 
 JNIEXPORT void JNICALL
-Java_com_doodee_voiceclicker_Transmission_startTransmission(JNIEnv *env, jclass type) {
-
-
-    if (tEngine == nullptr) {
-        tEngine = new Transmission();
-    }
-    engine->toggleTransmission();
-    engine->setTransmissionEngine(tEngine);
-
-}
-
-JNIEXPORT void JNICALL
 Java_com_doodee_voiceclicker_Transmission_stopTransmission(JNIEnv *env, jclass type) {
 
     engine->toggleTransmission();
     tEngine->stop();
 
+}
+JNIEXPORT void JNICALL
+Java_com_doodee_voiceclicker_Transmission_startTransmission(JNIEnv *env, jclass type,
+                                                            jstring ipAddress_) {
+    const char *ipAddress = env->GetStringUTFChars(ipAddress_, 0);
+
+    if (tEngine == nullptr) {
+        tEngine = new Transmission(ipAddress);
+    }
+    engine->toggleTransmission();
+    engine->setTransmissionEngine(tEngine);
+
+    env->ReleaseStringUTFChars(ipAddress_, ipAddress);
 }
 }

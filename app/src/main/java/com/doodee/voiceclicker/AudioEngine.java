@@ -10,7 +10,7 @@ public enum AudioEngine {
     }
 
 
-    public static native void startEngine();
+    public static native void startEngine(String s);
 
     public static native void stopEngine();
 

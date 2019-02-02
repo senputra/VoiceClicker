@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             isEngineStarted = false;
         } else {
             if (checkMyPermission()) {
-                AudioEngine.startEngine();
+                AudioEngine.startEngine(etIPAddrs.getText().toString());
                 tv.setText("Recording Stream started");
                 btn.setText("Stop Audio");
                 isEngineStarted = true;
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             isTransmissionOn = false;
         } else {
             if (checkMyPermission()) {
-                Transmission.startTransmission();
+                Transmission.startTransmission(etIPAddrs.getText().toString());
                 tv.setText("Transmission started");
                 btnTransmit.setText("Stop Transmission!");
                 isTransmissionOn = true;

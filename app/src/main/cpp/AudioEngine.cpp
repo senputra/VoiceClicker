@@ -206,7 +206,7 @@ AudioEngine::dataCallback(AAudioStream *stream, void *audioData, int32_t numFram
         }
     }
 
-    LOGD("numFrames of the recording %d", AAudioStream_getXRunCount(stream_));
+//    LOGD("numFrames of the recording %d", AAudioStream_getXRunCount(stream_));
 
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
 
@@ -228,7 +228,7 @@ void AudioEngine::toggleTransmission() {
  * Store the Transmission Engine passed down from parent class
  */
 void AudioEngine::setTransmissionEngine(Transmission *tEngine) {
-    tEngine_ = reinterpret_cast<Transmission *>(tEngine);
+    tEngine_ = tEngine;
     if (tEngine == nullptr) {
         isTransmissionOn_ = false;
         LOGE("Transmission Engine is not passed well");
@@ -236,7 +236,7 @@ void AudioEngine::setTransmissionEngine(Transmission *tEngine) {
 }
 
 void AudioEngine::setTransmissionEngine(TransmissionTCP *tEngine) {
-    tEngine_ = reinterpret_cast<TransmissionTCP *>(tEngine);
+    tEngine_ = tEngine;
     if (tEngine == nullptr) {
         isTransmissionOn_ = false;
         LOGE("Transmission Engine is not passed well");

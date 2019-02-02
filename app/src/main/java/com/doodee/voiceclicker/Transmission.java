@@ -8,7 +8,7 @@ public enum Transmission {
         System.loadLibrary("native-lib");
     }
 
-    public static native void startTransmission();
+    public static native void startTransmission(String s);
 
     public static native void stopTransmission();
 

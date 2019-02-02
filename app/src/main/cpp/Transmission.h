@@ -20,8 +20,8 @@ class Transmission {
 
 public:
 
-    Transmission() {
-        setupClient();
+    explicit Transmission(const char *ipAddress) {
+        setupClient(ipAddress);
     };
 
     void stop() {
@@ -49,7 +49,7 @@ private:
     udp::endpoint endpoint_;
 
 
-    void setupClient() {
+    void setupClient(const char *ipAddress) {
         try {
 
             asio::io_context io_context;
@@ -60,7 +60,9 @@ private:
             udp::resolver resolver(io_context);
             LOGD("IO_CONTEXT RESOLVED");
 
-            endpoint_ = *resolver.resolve(udp::v4(), "192.168.137.1", "5008").begin();
+            std::string str(ipAddress);
+
+            endpoint_ = *resolver.resolve(udp::v4(), str, "5008").begin();
         } catch (std::exception &e) {
             LOGE("Exception: %s", e.what());
         }

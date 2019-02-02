@@ -49,12 +49,12 @@ public:
 private:
 
     std::string ipAddrs_;
-    int port_;
+    int port_{};
     int32_t numFrames_ = 192;
     int32_t bufferSize = numFrames_ * 2;
-    AAudioStream *stream_;
-    void *data_;
-    tcp::socket *socket_;
+    AAudioStream *stream_{};
+    void *data_{};
+    tcp::socket *socket_{};
 
 private:
 
