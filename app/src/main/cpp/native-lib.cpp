@@ -13,7 +13,7 @@
 static AudioEngine *engine = nullptr;
 static Transmission *tEngine = nullptr;
 static TransmissionTCP *tcpEngine = nullptr;
-static bool isTCP = true;
+static bool isTCP = false;
 
 extern "C" {
 

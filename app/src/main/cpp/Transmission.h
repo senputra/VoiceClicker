@@ -41,19 +41,13 @@ public:
 private:
 
     std::string ipAddrs_;
-    int port_;
+    int port_{};
     int32_t numFrames_ = 192;
     int32_t bufferSize = numFrames_ * 2;
-    AAudioStream *stream_;
-    void *data_;
-    udp::socket *socket_;
+
+    udp::socket *socket_{};
     udp::endpoint endpoint_;
 
-
-    void logData() {
-        LOGD("received data from mic: %d",
-             AAudioStream_read(stream_, data_, numFrames_, static_cast<int64_t> (0)));
-    }
 
     void setupClient() {
         try {
@@ -66,7 +60,7 @@ private:
             udp::resolver resolver(io_context);
             LOGD("IO_CONTEXT RESOLVED");
 
-            endpoint_ = *resolver.resolve(udp::v4(), "192.168.43.201", "5008").begin();
+            endpoint_ = *resolver.resolve(udp::v4(), "192.168.137.1", "5008").begin();
         } catch (std::exception &e) {
             LOGE("Exception: %s", e.what());
         }

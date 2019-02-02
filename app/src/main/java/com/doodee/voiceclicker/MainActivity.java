@@ -58,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
         btnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendControl(KEYBOARD, (int) 0x25);
+                if (sendControl(KEYBOARD, (int) 0x25)) Log.d(TAG, "arrow sent");
             }
         });
         Button btnRight = findViewById(R.id.btnRight);
         btnRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendControl(KEYBOARD, (int) 0x27);
+                if (sendControl(KEYBOARD, (int) 0x27)) Log.d(TAG, "arrow sent");
             }
         });
 
