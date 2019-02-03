@@ -29,7 +29,7 @@ public class FragmentClicker extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.home_clicker, container, false);
+        View view = inflater.inflate(R.layout.tab_clicker, container, false);
         return view;
     }
 
