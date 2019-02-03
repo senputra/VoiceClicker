@@ -20,13 +20,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 DooLog.d("case 0");
-                return FragmentConnection.newInstance("HOME");
+                return FragmentConnection.newInstance(getPageTitle(position).toString());
             case 1:
                 DooLog.d("case 1");
-                return FragmentClicker.newInstance("CLICKER");
+                return FragmentClicker.newInstance(getPageTitle(position).toString());
             case 2:
                 DooLog.d("case 2");
-                return FragmentMic.newInstance("MIC");
+                return FragmentMic.newInstance(getPageTitle(position).toString());
             default:
                 return null;
         }
@@ -50,7 +50,16 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
      */
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Page " + position;
+        switch (position) {
+            case 0:
+                return "HOME";
+            case 1:
+                return "CLICKER";
+            case 2:
+                return "MIC";
+            default:
+                return null;
+        }
     }
 
 }
