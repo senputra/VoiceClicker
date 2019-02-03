@@ -24,6 +24,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 DooLog.d("case 1");
                 return FragmentClicker.newInstance("CLICKER");
+            case 2:
+                DooLog.d("case 2");
+                return FragmentMic.newInstance("MIC");
             default:
                 return null;
         }
@@ -36,7 +39,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     /**
