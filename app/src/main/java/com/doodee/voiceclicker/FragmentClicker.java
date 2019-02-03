@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 public class FragmentClicker extends Fragment {
     public String title;
 
-    public static FragmentConnection newInstance(String title) {
-        FragmentConnection fragmentConnection = new FragmentConnection();
+    public static FragmentClicker newInstance(String title) {
+        FragmentClicker fragmentClicker = new FragmentClicker();
         Bundle args = new Bundle();
         args.putString("argsTitle", title);
-        fragmentConnection.setArguments(args);
-        return fragmentConnection;
+        fragmentClicker.setArguments(args);
+        return fragmentClicker;
     }
 
     // Store instance variables based on arguments passed
