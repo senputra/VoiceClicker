@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tv;
     Button btn;
     Button btnTransmit;
-    Server mServer;
+    JavaTransmission mJavaTransmission;
     EditText etIPAddrs;
 
 
@@ -31,10 +31,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mJavaTransmission = new JavaTransmission();
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mJavaTransmission);
         mViewPager = (CustomViewPager) findViewById(R.id.customViewPager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
 
         ////////////////////////////////////////////////////////////////////////////
 //        etIPAddrs = findViewById(R.id.etIPAddrs);
@@ -78,21 +79,21 @@ public class MainActivity extends AppCompatActivity {
 
 //    boolean sendControl(int type, int data) {
 //        byte[] buffer = new byte[]{(byte) type, (byte) (data)};
-//        if (mServer == null) {
+//        if (mJavaTransmission == null) {
 //            setupServer(etIPAddrs.getText().toString(), 5009);
 //            return false;
 //        } else {
-//            mServer.send(buffer);
+//            mJavaTransmission.send(buffer);
 //            DooLog.d(TAG, "onClick: send Control successful");
 //        }
 //        return true;
 //    }
 //
-//    void setupServer(String ipAddress, int port) {
-//        if (mServer == null) {
-//            mServer = new Server(ipAddress, port);
-//        }
-//    }
+void setupServer(String ipAddress, int port) {
+    if (mJavaTransmission == null) {
+        mJavaTransmission = new JavaTransmission(ipAddress, port);
+    }
+}
 //
 //    void toggleEngine() {
 //        if (isEngineStarted) {
