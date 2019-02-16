@@ -1,8 +1,6 @@
-package com.doodee.voiceclicker;
+package com.doodee.voiceclicker.KeyEventFeatures;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.inputmethodservice.InputMethodService;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -16,12 +14,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.doodee.voiceclicker.KeyEventFeatures.CustomKeyboardCaptureView;
+import com.doodee.voiceclicker.DooLog;
+import com.doodee.voiceclicker.R;
+import com.doodee.voiceclicker.backend.JavaTransmission;
 
 import java.util.Objects;
 
 public class FragmentClicker extends Fragment {
-    CustomKeyboardCaptureView ckcView;
+    CustomKeyboardCaptureView mCustomKeyboardView;
 
     int MOUSE = 1;
     int KEYBOARD = 2;
@@ -44,7 +44,6 @@ public class FragmentClicker extends Fragment {
         if (mJavaTransmission == null) {
             DooLog.e("mJavaTransmission not transferred");
         }
-
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -52,6 +51,8 @@ public class FragmentClicker extends Fragment {
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.tab_clicker, container, false);
+        view.setOnTouchListener((View.OnTouchListener) new MousePadListener("right", "middle", mJavaTransmission));
+
         Button btnKey = view.findViewById(R.id.btn_key);
         final EditText et = view.findViewById(R.id.editText);
         et.setKeyListener(new KeyListener() {
@@ -94,8 +95,7 @@ public class FragmentClicker extends Fragment {
             }
         });
 
-        ckcView = view.findViewById(R.id.keyListener);
-
+        mCustomKeyboardView = view.findViewById(R.id.keyListener);
         btnKey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,12 +106,10 @@ public class FragmentClicker extends Fragment {
     }
 
     private void showKeyboard() {
-        ckcView.requestFocus();
+        mCustomKeyboardView.requestFocus();
         InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getContext()).getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInputFromWindow(ckcView.getWindowToken(), 0, 0);
-
-        @SuppressLint("ServiceCast") InputMethodService ims = (InputMethodService) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-
+        imm.toggleSoftInputFromWindow(mCustomKeyboardView.getWindowToken(), 0, 0);
+        mCustomKeyboardView.setmJavaTransmission(mJavaTransmission);
 
     }
 
@@ -120,4 +118,9 @@ public class FragmentClicker extends Fragment {
         mJavaTransmission.send(buffer);
         DooLog.d("onClick: send Control successful");
     }
+
+
+    /////////////////////GESTURE CALLBACKS////////////////////////////////
+    /////////////////////////////////////////////////////////////////////
+
 }

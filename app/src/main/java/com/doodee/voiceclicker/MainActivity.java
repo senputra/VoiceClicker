@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.doodee.voiceclicker.backend.JavaTransmission;
+
 public class MainActivity extends AppCompatActivity {
 
     // Variables for the swipe views
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mJavaTransmission);
         mViewPager = (CustomViewPager) findViewById(R.id.customViewPager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setSwipeable(false);
 
 
         ////////////////////////////////////////////////////////////////////////////
@@ -131,11 +134,11 @@ void setupServer(String ipAddress, int port) {
 //        }
 //    }
 //
-//    /**
-//     * get permission to use microphones
-//     *
-//     * @return true->permission granted ; false->otherwise
-//     */
+    /**
+     * get permission to use microphones
+     *
+     * @return true->permission granted ; false->otherwise
+     */
 //    protected boolean checkMyPermission() {
 //        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
 //                ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
@@ -167,7 +170,7 @@ void setupServer(String ipAddress, int port) {
 //        }
 //
 //    }
-//
+
 //    /**
 //     * to use toast in inner class such as onClickListener
 //     *

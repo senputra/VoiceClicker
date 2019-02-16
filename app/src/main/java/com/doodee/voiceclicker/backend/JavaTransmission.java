@@ -1,4 +1,6 @@
-package com.doodee.voiceclicker;
+package com.doodee.voiceclicker.backend;
+
+import com.doodee.voiceclicker.DooLog;
 
 import java.io.Serializable;
 import java.net.DatagramPacket;
@@ -16,7 +18,9 @@ public class JavaTransmission implements Serializable {
 
     private int status = NOT_READY;
 
-    JavaTransmission(String ipAddrs, int port) {
+    private Runnable sendKeyRunnable;
+
+    public JavaTransmission(String ipAddrs, int port) {
         try {
             this.datagramSocket = new DatagramSocket();
             this.ipAddrs = ipAddrs;
@@ -28,11 +32,11 @@ public class JavaTransmission implements Serializable {
         }
     }
 
-    JavaTransmission() {
+    public JavaTransmission() {
         this.status = NOT_READY;
     }
 
-    boolean send(byte buffer[]) {
+    public boolean send(byte buffer[]) {
         if (this.status == READY) {
             try {
                 if (datagramSocket != null) {
@@ -50,7 +54,7 @@ public class JavaTransmission implements Serializable {
                     Thread mThread = new Thread(runnable);
                     mThread.start();
                     ;
-                    DooLog.d("send: SENT");
+//                    DooLog.d("send: SENT");
                 } else {
                     DooLog.d("Socket not set");
                     return false;
@@ -71,7 +75,7 @@ public class JavaTransmission implements Serializable {
             try {
                 if (datagramSocket != null) {
                     final DatagramPacket packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(ipAddrs), port);
-                    Runnable runnable = new Runnable() {
+                    sendKeyRunnable = new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -81,9 +85,8 @@ public class JavaTransmission implements Serializable {
                             }
                         }
                     };
-                    Thread mThread = new Thread(runnable);
+                    Thread mThread = new Thread(sendKeyRunnable);
                     mThread.start();
-                    ;
                     DooLog.d("send: SENT");
                 } else {
                     DooLog.d("Socket not set");
@@ -100,7 +103,7 @@ public class JavaTransmission implements Serializable {
         }
     }
 
-    void connect(String ipAddrs, int port) {
+    public void connect(String ipAddrs, int port) {
         try {
             this.datagramSocket = new DatagramSocket();
             this.ipAddrs = ipAddrs;
@@ -112,7 +115,11 @@ public class JavaTransmission implements Serializable {
         }
     }
 
-    int getStatus() {
+    public int getStatus() {
         return this.status;
+    }
+
+    public String getIpAddrs() {
+        return this.ipAddrs;
     }
 }

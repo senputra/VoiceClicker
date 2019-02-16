@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.doodee.voiceclicker.backend.JavaTransmission;
+
 public class FragmentConnection extends Fragment {
     private JavaTransmission mJavaTransmission;
     private String TRANSMISSION_KEY = "transmissionObj";

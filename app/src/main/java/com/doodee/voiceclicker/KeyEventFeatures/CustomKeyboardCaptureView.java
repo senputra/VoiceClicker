@@ -9,10 +9,13 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
 import com.doodee.voiceclicker.DooLog;
+import com.doodee.voiceclicker.backend.JavaTransmission;
+import com.doodee.voiceclicker.backend.NetworkPacket;
 
 public class CustomKeyboardCaptureView extends View {
 
     public static final SparseIntArray SpecialKeysMap = new SparseIntArray();
+    private JavaTransmission mJavaTransmission;
 
     static {
         int i = 0;
@@ -76,6 +79,15 @@ public class CustomKeyboardCaptureView extends View {
     }
 
     public void sendChars(CharSequence c) {
-        DooLog.d("Custom Keyboard Capture :" + c);
+        if (mJavaTransmission == null) {
+            DooLog.d("Java Transmission is null");
+            return;
+        }
+        mJavaTransmission.send(NetworkPacket.getPacket(NetworkPacket.INPUT_TYPE_KEYBOARD, NetworkPacket.KEYBOARD_ACTION_KEYCHAR, (byte) c.charAt(0)));
+        DooLog.d("Custom Keyboard Capture :" + c.charAt(0) + " byte" + (byte) c.charAt(0) + " length " + c.length());
+    }
+
+    public void setmJavaTransmission(JavaTransmission jt) {
+        mJavaTransmission = jt;
     }
 }

@@ -1,4 +1,4 @@
-package com.doodee.voiceclicker;
+package com.doodee.voiceclicker.MicFeatures;
 
 public enum Transmission {
     INSTANCE;
@@ -6,6 +6,7 @@ public enum Transmission {
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
+
     }
 
     public static native void startTransmission(String s);
