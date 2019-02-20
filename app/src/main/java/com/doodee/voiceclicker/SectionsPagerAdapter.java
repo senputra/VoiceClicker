@@ -5,8 +5,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.doodee.voiceclicker.KeyEventFeatures.FragmentClicker;
+import com.doodee.voiceclicker.MicFeatures.FragmentMic;
+import com.doodee.voiceclicker.backend.JavaTransmission;
+
 import java.io.Serializable;
-import java.util.Objects;
 
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -38,7 +41,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 DooLog.d("case 2");
                 bundle.putSerializable(TRANSMISSION_KEY, (Serializable) this.mJavaTransmission);
-                return FragmentMic.newInstance(Objects.requireNonNull(getPageTitle(position)).toString());
+                return FragmentMic.newInstance(bundle);
             default:
                 return null;
         }

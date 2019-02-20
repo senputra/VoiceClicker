@@ -7,52 +7,41 @@
 #include "AudioEngine.h"
 #include "DooDeeLOG.h"
 #include "Transmission.h"
-#include "TransmissionTCP.h"
 
 
 static AudioEngine *engine = nullptr;
 static Transmission *tEngine = nullptr;
-static TransmissionTCP *tcpEngine = nullptr;
-static bool isTCP = false;
 
 extern "C" {
 
 JNIEXPORT void JNICALL
-Java_com_doodee_voiceclicker_AudioEngine_startEngine(JNIEnv *env, jclass type, jstring ipAddress_) {
+Java_com_doodee_voiceclicker_MicFeatures_AudioEngine_startEngine(JNIEnv *env, jclass type,
+                                                                 jstring ipAddress_) {
 
     const char *ipAddress = env->GetStringUTFChars(ipAddress_, 0);
 
-    if (isTCP) {
-        engine = new AudioEngine();
-        tcpEngine = new TransmissionTCP();
-        LOGD("OKEHHHH");
-    } else {
-        engine = new AudioEngine();
-        tEngine = new Transmission(ipAddress);
-        LOGD("OKEHHHH");
-    }
+    engine = new AudioEngine();
+    tEngine = new Transmission(ipAddress);
+    LOGD("OKEHHHH");
 
     env->ReleaseStringUTFChars(ipAddress_, ipAddress);
 
 }
 
 JNIEXPORT void JNICALL
-Java_com_doodee_voiceclicker_AudioEngine_stopEngine(JNIEnv *env, jclass type) {
-
+Java_com_doodee_voiceclicker_MicFeatures_AudioEngine_stopEngine(JNIEnv *env, jclass type) {
     engine->stopStream();
 }
-
-
 JNIEXPORT void JNICALL
-Java_com_doodee_voiceclicker_Transmission_stopTransmission(JNIEnv *env, jclass type) {
+Java_com_doodee_voiceclicker_MicFeatures_Transmission_stopTransmission(JNIEnv *env, jclass type) {
 
     engine->toggleTransmission();
     tEngine->stop();
 
 }
 JNIEXPORT void JNICALL
-Java_com_doodee_voiceclicker_Transmission_startTransmission(JNIEnv *env, jclass type,
-                                                            jstring ipAddress_) {
+Java_com_doodee_voiceclicker_MicFeatures_Transmission_startTransmission(JNIEnv *env, jclass type,
+                                                                        jstring ipAddress_) {
     const char *ipAddress = env->GetStringUTFChars(ipAddress_, 0);
 
     if (tEngine == nullptr) {
