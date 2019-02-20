@@ -7,13 +7,10 @@
 #include "AudioEngine.h"
 #include "DooDeeLOG.h"
 #include "Transmission.h"
-#include "TransmissionTCP.h"
 
 
 static AudioEngine *engine = nullptr;
 static Transmission *tEngine = nullptr;
-static TransmissionTCP *tcpEngine = nullptr;
-static bool isTCP = false;
 
 extern "C" {
 
@@ -23,15 +20,9 @@ Java_com_doodee_voiceclicker_MicFeatures_AudioEngine_startEngine(JNIEnv *env, jc
 
     const char *ipAddress = env->GetStringUTFChars(ipAddress_, 0);
 
-    if (isTCP) {
-        engine = new AudioEngine();
-        tcpEngine = new TransmissionTCP();
-        LOGD("OKEHHHH");
-    } else {
-        engine = new AudioEngine();
-        tEngine = new Transmission(ipAddress);
-        LOGD("OKEHHHH");
-    }
+    engine = new AudioEngine();
+    tEngine = new Transmission(ipAddress);
+    LOGD("OKEHHHH");
 
     env->ReleaseStringUTFChars(ipAddress_, ipAddress);
 
@@ -39,7 +30,6 @@ Java_com_doodee_voiceclicker_MicFeatures_AudioEngine_startEngine(JNIEnv *env, jc
 
 JNIEXPORT void JNICALL
 Java_com_doodee_voiceclicker_MicFeatures_AudioEngine_stopEngine(JNIEnv *env, jclass type) {
-
     engine->stopStream();
 }
 JNIEXPORT void JNICALL

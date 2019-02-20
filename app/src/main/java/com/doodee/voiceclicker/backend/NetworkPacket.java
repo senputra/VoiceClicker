@@ -42,14 +42,14 @@ public class NetworkPacket {
                     case MOUSE_ACTION_MIDDLE_CLICK:
                         return new byte[]{inputType, actionType, (byte) complimentData.length};
                     case MOUSE_ACTION_MOVE:
-                        if (complimentData.length == 2) {
-                            return new byte[]{inputType, actionType, (byte) complimentData.length, complimentData[0], complimentData[1]};
+                        if (complimentData.length == 4) {
+                            return new byte[]{inputType, actionType, (byte) complimentData.length, complimentData[0], complimentData[1], complimentData[2], complimentData[3]};
                         }
                         DooLog.d("Error input for MOUSE ACTION MOVE");
                         return null;
                     case MOUSE_ACTION_SCROLL:
-                        if (complimentData.length == 2) {
-                            return new byte[]{inputType, actionType, (byte) complimentData.length, complimentData[0], complimentData[1]};
+                        if (complimentData.length == 4) {
+                            return new byte[]{inputType, actionType, (byte) complimentData.length, complimentData[0], complimentData[1], complimentData[2], complimentData[3]};
                         }
                         DooLog.d("Error input for MOUSE ACTION SCROLL");
                         return null;
@@ -77,7 +77,9 @@ public class NetworkPacket {
                         DooLog.d("Error input for KEYBOARD_ACTION_META");
                         return null;
                     case KEYBOARD_ACTION_OTHERS:
-                        if (complimentData.length == 2) {
+                        if (complimentData.length == 1) {
+                            return new byte[]{inputType, actionType, (byte) complimentData.length, complimentData[0]};
+                        } else if (complimentData.length == 2) {
                             return new byte[]{inputType, actionType, (byte) complimentData.length, complimentData[0], complimentData[1]};
                         }
                         DooLog.d("Error input for KEYBOARD_ACTION_OTHERS");

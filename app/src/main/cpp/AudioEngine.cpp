@@ -114,7 +114,7 @@ void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
     AAudioStreamBuilder_setChannelCount(builder, 1);
     AAudioStreamBuilder_setDataCallback(builder, ::dataCallback, this);
     AAudioStreamBuilder_setErrorCallback(builder, ::errorCallback, this);
-//    AAudioStreamBuilder_setSampleRate(builder,44100);
+//    AAudioStreamBuilder_setSampleRate(builder,48000);
     AAudioStreamBuilder_setFramesPerDataCallback(builder, 192);
 
 }
@@ -197,13 +197,9 @@ AudioEngine::dataCallback(AAudioStream *stream, void *audioData, int32_t numFram
          * in this case 192
          * thus buffer is from audioData[0] to audioData[191*2] since one frame takes 2 Byte
          * */
-        if (isTCP) {
-            reinterpret_cast<TransmissionTCP *>(tEngine_)->send(
-                    reinterpret_cast<int16_t * >(audioData), numFrames);
-        } else {
-            reinterpret_cast<Transmission *>(tEngine_)->send(
-                    reinterpret_cast<int16_t * >(audioData), numFrames);
-        }
+        reinterpret_cast<Transmission *>(tEngine_)->send(
+                reinterpret_cast<int16_t * >(audioData), numFrames);
+
     }
 
 //    LOGD("numFrames of the recording %d", AAudioStream_getXRunCount(stream_));
@@ -234,15 +230,6 @@ void AudioEngine::setTransmissionEngine(Transmission *tEngine) {
         LOGE("Transmission Engine is not passed well");
     }
 }
-
-void AudioEngine::setTransmissionEngine(TransmissionTCP *tEngine) {
-    tEngine_ = tEngine;
-    if (tEngine == nullptr) {
-        isTransmissionOn_ = false;
-        LOGE("Transmission Engine is not passed well");
-    }
-}
-
 /**
  * Clean the recording stream when it is first started
  */

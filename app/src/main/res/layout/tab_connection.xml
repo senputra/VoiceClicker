@@ -6,47 +6,27 @@
     android:layout_height="match_parent">
 
 
-
-    <Button
-        android:id="@+id/btnRight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="42dp"
-        android:text="Right"
-        app:layout_constraintBottom_toTopOf="@+id/txt_connection_status12"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/btnLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="49dp"
-        android:layout_marginBottom="42dp"
-        android:text="left"
-        app:layout_constraintBottom_toTopOf="@+id/txt_connection_status12"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <EditText
         android:id="@+id/etIPAddrs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
         android:ems="10"
         android:inputType="phone"
-        android:text="192.168.42.140"
+        android:text="192.168.137.1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="192.168.42.140" />
+        tools:layout_editor_absoluteY="48dp"
+        tools:text="192.168.137.1" />
 
     <Button
         android:id="@+id/btnConnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:text="Connect"
-        tools:layout_editor_absoluteX="160dp"
-        tools:layout_editor_absoluteY="143dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etIPAddrs" />
 
 
 </android.support.constraint.ConstraintLayout>

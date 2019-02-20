@@ -6,7 +6,6 @@
 #define VOICECLICKER_AUDIOENGINE_H
 
 #include <aaudio/AAudio.h>
-#include "TransmissionTCP.h"
 #include "Transmission.h"
 
 
@@ -15,25 +14,18 @@ class AudioEngine{
 public:
 
     AudioEngine();
-
     ~AudioEngine();
-    void createRecordingStream();
 
+    void createRecordingStream();
     void errorCallback(AAudioStream *stream, aaudio_result_t audioError);
 
     aaudio_data_callback_result_t
     dataCallback(AAudioStream *stream, void *audioData, int32_t numFrames);
-
     void stopStream();
-
     void toggleTransmission();
-
     void setTransmissionEngine(Transmission *tEngine);
 
-    void setTransmissionEngine(TransmissionTCP *tEngine);
-
 private:
-    bool isTCP = false;
     bool isTransmissionOn_ = false;
 
     AAudioStreamBuilder *createStreamBuilder();
