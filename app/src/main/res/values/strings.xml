@@ -4,4 +4,5 @@
     <string name="right_arrow"><![CDATA[<]]></string>
     <string name="keyboard_text">Keyboard</string>
     <string name="trackpad_instruction">The whole square is a trackpad for your computer. Double tap to trigger right click. Triple tap to trigger middle click.</string>
+    <string name="Welcome_Text">Welcome! Ensure that you are in the same network as your computer.</string>
 </resources>

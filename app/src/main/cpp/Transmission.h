@@ -20,8 +20,8 @@ class Transmission {
 
 public:
 
-    explicit Transmission(const char *ipAddress) {
-        setupClient(ipAddress);
+    explicit Transmission(const char *ipAddress, int port) {
+        setupClient(ipAddress, port);
     };
 
     void stop() {
@@ -40,8 +40,6 @@ public:
     }
 private:
 
-    std::string ipAddrs_;
-    int port_{};
     int32_t numFrames_ = 192;
     int32_t bufferSize = numFrames_ * 2;
 
@@ -49,7 +47,7 @@ private:
     udp::endpoint endpoint_;
 
 
-    void setupClient(const char *ipAddress) {
+    void setupClient(const char *ipAddress, int port) {
         try {
 
             asio::io_context io_context;
@@ -62,7 +60,7 @@ private:
 
             std::string str(ipAddress);
 
-            endpoint_ = *resolver.resolve(udp::v4(), str, "5008").begin();
+            endpoint_ = *resolver.resolve(udp::v4(), str, std::to_string(port)).begin();
         } catch (std::exception &e) {
             LOGE("Exception: %s", e.what());
         }

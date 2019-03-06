@@ -1,4 +1,4 @@
-package com.doodee.voiceclicker.KeyEventFeatures;
+package com.doodee.voiceclicker.KeyboardMouseFeature;
 
 import android.view.inputmethod.BaseInputConnection;
 

@@ -1,4 +1,4 @@
-package com.doodee.voiceclicker.KeyEventFeatures;
+package com.doodee.voiceclicker.KeyboardMouseFeature;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,10 +19,6 @@ import java.util.Objects;
 
 public class FragmentClicker extends Fragment {
     CustomKeyboardCaptureView mCustomKeyboardView;
-
-    int MOUSE = 1;
-    int KEYBOARD = 2;
-    int KEYBOARD_CHAR = 3;
 
     private JavaTransmission mJavaTransmission;
     private String TRANSMISSION_KEY = "transmissionObj";

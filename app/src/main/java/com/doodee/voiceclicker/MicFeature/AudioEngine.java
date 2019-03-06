@@ -1,4 +1,4 @@
-package com.doodee.voiceclicker.MicFeatures;
+package com.doodee.voiceclicker.MicFeature;
 
 public enum AudioEngine {
 
@@ -10,7 +10,7 @@ public enum AudioEngine {
     }
 
 
-    public static native void startEngine(String s);
+    public static native void startEngine(String s, int port);
 
     public static native void stopEngine();
 

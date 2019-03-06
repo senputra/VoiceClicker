@@ -1,4 +1,4 @@
-package com.doodee.voiceclicker.KeyEventFeatures;
+package com.doodee.voiceclicker.KeyboardMouseFeature;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -21,7 +21,7 @@ public class CustomKeyboardCaptureView extends View {
         int i = 0;
         SpecialKeysMap.put(KeyEvent.KEYCODE_DEL, ++i);              // 1
         SpecialKeysMap.put(KeyEvent.KEYCODE_TAB, ++i);              // 2
-        SpecialKeysMap.put(KeyEvent.KEYCODE_ENTER, 12);
+        SpecialKeysMap.put(KeyEvent.KEYCODE_ENTER, ++i);
         ++i;        // 3 is not used, return is 12 instead
         SpecialKeysMap.put(KeyEvent.KEYCODE_DPAD_LEFT, ++i);        // 4
         SpecialKeysMap.put(KeyEvent.KEYCODE_DPAD_UP, ++i);          // 5

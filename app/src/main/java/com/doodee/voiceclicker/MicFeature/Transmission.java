@@ -1,4 +1,4 @@
-package com.doodee.voiceclicker.MicFeatures;
+package com.doodee.voiceclicker.MicFeature;
 
 public enum Transmission {
     INSTANCE;
@@ -9,7 +9,7 @@ public enum Transmission {
 
     }
 
-    public static native void startTransmission(String s);
+    public static native void startTransmission(String ipAddrs, int audioStreamPort);
 
     public static native void stopTransmission();
 
