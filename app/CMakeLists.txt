@@ -54,5 +54,5 @@ include_directories(
         C:/Users/dodys/StudioProjects/DooDeeLib/asio-1.12.2/include#add my DooDeeLib library folder
 )
 link_directories(
-        C:/Users/dodys/StudioProjects/DooDeeLib/asio-1.12.2/include #add my DooDeeLib library folder
+        C:/Users/dodys/StudioProjects/DooDeeLib/asio-1.12.2/include#add my DooDeeLib library folder
 )

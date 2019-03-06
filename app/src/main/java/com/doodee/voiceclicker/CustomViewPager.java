@@ -6,6 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+/**
+ * This class allows the custom view pager to be NOT SWIPEABLE
+ */
 public class CustomViewPager extends ViewPager {
 
     private boolean isSwipeable;

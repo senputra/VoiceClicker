@@ -1,4 +1,4 @@
-package com.doodee.voiceclicker.MicFeatures;
+package com.doodee.voiceclicker.MicFeature;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -29,6 +29,7 @@ public class FragmentMic extends Fragment {
     String ipAddrs;
     private JavaTransmission mJavaTransmission;
     private String TRANSMISSION_KEY = "transmissionObj";
+    private int audioStreamPort;
 
     public static FragmentMic newInstance(Bundle bundle) {
         FragmentMic fragmentConnection = new FragmentMic();
@@ -55,6 +56,7 @@ public class FragmentMic extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setupNativeWorks();
                 toggleEngine();
             }
         });
@@ -63,18 +65,21 @@ public class FragmentMic extends Fragment {
         btnTransmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setupNativeWorks();
                 toggleTransmission();
             }
         });
 
         tv = view.findViewById(R.id.txt_connection_status);
-        setupNativeWorks();
+
 
         return view;
     }
 
     private void setupNativeWorks() {
         ipAddrs = mJavaTransmission.getIpAddrs();
+        audioStreamPort = mJavaTransmission.getAudioStreamPort();
+        DooLog.d("audioStreamport " + audioStreamPort);
     }
 
     void toggleEngine() {
@@ -85,7 +90,7 @@ public class FragmentMic extends Fragment {
             isEngineStarted = false;
         } else {
             if (checkMyPermission()) {
-                AudioEngine.startEngine(ipAddrs);
+                AudioEngine.startEngine(ipAddrs, audioStreamPort);
                 tv.setText("Recording Stream started");
                 btn.setText("Stop Audio");
                 isEngineStarted = true;
@@ -103,7 +108,7 @@ public class FragmentMic extends Fragment {
             isTransmissionOn = false;
         } else {
             if (checkMyPermission()) {
-                Transmission.startTransmission(ipAddrs);
+                Transmission.startTransmission(ipAddrs, audioStreamPort);
                 tv.setText("Transmission started");
                 btnTransmit.setText("Stop Transmission!");
                 isTransmissionOn = true;

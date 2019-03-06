@@ -19,8 +19,8 @@ public class NetworkPacket {
     public static final byte KEYBOARD_ACTION_OTHERS = 12;
 
     /**
-     * This will return buffer of shape:
-     * [input type(1 byte), action type(1 byte), legnth of data(1 byte), data max 4 bytes]
+     * This will return buffer of an arrangement of such:
+     * [input type(1 byte), action type(1 byte), length of data(1 byte), data max 4 bytes]
      *
      * @param inputType
      * @param actionType
