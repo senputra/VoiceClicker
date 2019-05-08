@@ -22,6 +22,7 @@ public:
     aaudio_data_callback_result_t
     dataCallback(AAudioStream *stream, void *audioData, int32_t numFrames);
     void stopStream();
+    void startSream();
     void toggleTransmission();
     void setTransmissionEngine(Transmission *tEngine);
 

@@ -21,9 +21,15 @@ Java_com_doodee_voiceclicker_MicFeature_AudioEngine_startEngine(JNIEnv *env, jcl
 
     const char *ipAddress = env->GetStringUTFChars(ipAddress_, 0);
 
-    engine = new AudioEngine();
-    tEngine = new Transmission(ipAddress, audioStreamPort);
+    if(engine == nullptr) {
+        engine = new AudioEngine();
+    }
+    if(tEngine == nullptr) {
+        tEngine = new Transmission(ipAddress, audioStreamPort);
+        engine->setTransmissionEngine(tEngine);
+    }
     LOGD("OKEHHHH");
+    engine->startSream();
 
     env->ReleaseStringUTFChars(ipAddress_, ipAddress);
 
@@ -37,7 +43,7 @@ JNIEXPORT void JNICALL
 Java_com_doodee_voiceclicker_MicFeature_Transmission_stopTransmission(JNIEnv *env, jclass type) {
 
     engine->toggleTransmission();
-    tEngine->stop();
+//    tEngine->stop();
 
 }
 JNIEXPORT void JNICALL
@@ -48,9 +54,11 @@ Java_com_doodee_voiceclicker_MicFeature_Transmission_startTransmission(JNIEnv *e
 
     if (tEngine == nullptr) {
         tEngine = new Transmission(ipAddress, audioStreamPort);
+     if(engine != nullptr){
+         engine->setTransmissionEngine(tEngine);
+         }
     }
     engine->toggleTransmission();
-    engine->setTransmissionEngine(tEngine);
 
     env->ReleaseStringUTFChars(ipAddress_, ipAddress);
 }

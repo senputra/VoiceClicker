@@ -14,6 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".QuickStart"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_quick_start"
+            android:theme="@style/FullscreenTheme"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +27,5 @@
             </intent-filter>
         </activity>
     </application>
-
-
 
 </manifest>

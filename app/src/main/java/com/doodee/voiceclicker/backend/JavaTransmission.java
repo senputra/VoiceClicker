@@ -1,5 +1,7 @@
 package com.doodee.voiceclicker.backend;
 
+import android.os.Parcelable;
+
 import com.doodee.voiceclicker.DooLog;
 
 import java.io.Serializable;
@@ -9,68 +11,51 @@ import java.net.InetAddress;
 
 
 public class JavaTransmission implements Serializable {
-    public static int NOT_READY = 1;
-    public static int READY = 2;
+    private static int NOT_READY = 1;
+    private static int READY = 2;
 
     private String ipAddrs;
     private int inputStreamPort = 0;
     private int audioStreamPort = 0;
-    private DatagramSocket datagramSocket;
+    private transient DatagramSocket datagramSocket;
 
     private int status = NOT_READY;
 
     private Runnable sendKeyRunnable;
 
-//    public JavaTransmission(String ipAddrs) {
-//        try {
-//            this.datagramSocket = new DatagramSocket();
-//            this.ipAddrs = ipAddrs;
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    public JavaTransmission() {
+    public JavaTransmission()  {
         try {
             this.datagramSocket = new DatagramSocket();
-
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public boolean send(byte buffer[]) {
+    public void send(byte buffer[]) {
         if (this.status == READY) {
             try {
                 if (datagramSocket != null) {
                     final DatagramPacket packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(ipAddrs), inputStreamPort);
-                    Runnable runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                datagramSocket.send(packet);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                    new Thread(()->{
+                        try {
+                            datagramSocket.send(packet);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    };
-                    Thread mThread = new Thread(runnable);
-                    mThread.start();
-                    //                    DooLog.d("send: SENT");
+                    }).start();
                 } else {
                     DooLog.d("Socket not set");
-                    return false;
+//                    return false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                return false;
+//                return false;
             }
-            return true;
+//            return true;
         } else {
             DooLog.d("Socket not READY");
-            return false;
+//            return false;
         }
     }
 
@@ -78,7 +63,7 @@ public class JavaTransmission implements Serializable {
         this.status = (inputStreamPort == 0 || audioStreamPort == 0) ? NOT_READY : READY;
     }
 
-    public String getIpAddrs() {
+    public String getIpAddress() {
         return this.ipAddrs;
     }
 

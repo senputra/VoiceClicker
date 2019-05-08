@@ -77,7 +77,7 @@ public class FragmentMic extends Fragment {
     }
 
     private void setupNativeWorks() {
-        ipAddrs = mJavaTransmission.getIpAddrs();
+        ipAddrs = mJavaTransmission.getIpAddress();
         audioStreamPort = mJavaTransmission.getAudioStreamPort();
         DooLog.d("audioStreamport " + audioStreamPort);
     }

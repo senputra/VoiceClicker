@@ -75,6 +75,16 @@ public class CustomKeyboardCaptureView extends View {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         DooLog.d("On key up :" + event.getKeyCode());
+        switch (event.getKeyCode()){
+            case 24: // RIGHT ARROW
+                mJavaTransmission.send(NetworkPacket.getPacket(NetworkPacket.INPUT_TYPE_KEYBOARD, NetworkPacket.KEYBOARD_ACTION_OTHERS, (byte) 0x27)); break;
+            case 25: // LEFT ARROW
+                mJavaTransmission.send(NetworkPacket.getPacket(NetworkPacket.INPUT_TYPE_KEYBOARD, NetworkPacket.KEYBOARD_ACTION_OTHERS, (byte) 0x25)); break;
+            case 67: // BACK SPACE
+                mJavaTransmission.send(NetworkPacket.getPacket(NetworkPacket.INPUT_TYPE_KEYBOARD, NetworkPacket.KEYBOARD_ACTION_OTHERS, (byte) 0x08)); break;
+            case 66:
+                mJavaTransmission.send(NetworkPacket.getPacket(NetworkPacket.INPUT_TYPE_KEYBOARD, NetworkPacket.KEYBOARD_ACTION_OTHERS, (byte) 0x0D)); break;
+        }
         return true;
     }
 

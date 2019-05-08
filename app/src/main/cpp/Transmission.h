@@ -24,10 +24,14 @@ public:
         setupClient(ipAddress, port);
     };
 
-    void stop() {
+    void tearDown() {
         socket_->release();
         socket_->close();
         delete (this);
+    }
+
+    void stop(){
+        return;
     }
 
 
@@ -40,7 +44,7 @@ public:
     }
 private:
 
-    int32_t numFrames_ = 192;
+    int32_t numFrames_ = 256;
     int32_t bufferSize = numFrames_ * 2;
 
     udp::socket *socket_{};

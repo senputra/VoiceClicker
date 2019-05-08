@@ -86,16 +86,18 @@ void AudioEngine::createRecordingStream() {
 
         logRecordingStreamParameter(stream_);
 
-        result = AAudioStream_requestStart(stream_);
-        if (result != AAUDIO_OK) {
-            LOGE("Error starting stream. %s", AAudio_convertResultToText(result));
-        } else {
-            LOGD("Stream_ started : %s", AAudio_convertResultToText(result));
-        }
-
         AAudioStreamBuilder_delete(builder);
     }
 
+}
+void AudioEngine::startSream(){
+
+    aaudio_result_t result = AAudioStream_requestStart(stream_);
+    if (result != AAUDIO_OK) {
+        LOGE("Error starting stream. %s", AAudio_convertResultToText(result));
+    } else {
+        LOGD("Stream_ started : %s", AAudio_convertResultToText(result));
+    }
 }
 
 /**
@@ -115,7 +117,7 @@ void AudioEngine::setupRecordingStreamParameter(AAudioStreamBuilder *builder) {
     AAudioStreamBuilder_setDataCallback(builder, ::dataCallback, this);
     AAudioStreamBuilder_setErrorCallback(builder, ::errorCallback, this);
 //    AAudioStreamBuilder_setSampleRate(builder,48000);
-    AAudioStreamBuilder_setFramesPerDataCallback(builder, 192);
+    AAudioStreamBuilder_setFramesPerDataCallback(builder, 256);
 
 }
 
